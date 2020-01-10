@@ -1,26 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
+import { Transition, animated } from 'react-spring/renderprops';
+import Component1 from './components/component1';
+import Component2 from './components/component2';
 import './App.css';
+import Component3 from './components/component3';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+class App extends Component {
+  state = {
+    showComponent3: false
+  }
+
+  toggle = e => this.setState({
+    showComponent3: !this.state.showComponent3
+  });
+
+  render() {
+    return (
+      <div className="App">
+        <Component1 />
+        <Component2 toggle={this.toggle}/>
+        <Transition
+          native
+          items={this.state.showComponent3}
+          from={{ opacity:0, marginLeft: 1000 }}
+          enter={{ opacity:1, marginLeft: 0}}
+          leave={{ opacity:0, marginLeft: 1000}}
+          config={{ delay: 200, duration:500}}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+          {show => show && (props => (
+            <animated.div style={props}>
+              <Component3 />
+            </animated.div>
+          ))}
+        </Transition>
+      </div>
+    );
+  };
+
+};
 
 export default App;
